@@ -1,7 +1,6 @@
 package com.menterline.financialmodeling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.menterline.financialmodeling.models.DailyDataWithDate;
 import com.menterline.financialmodeling.models.AlphaVantageTickerData;
 import com.menterline.financialmodeling.models.MyTickerData;
 import org.junit.jupiter.api.Test;

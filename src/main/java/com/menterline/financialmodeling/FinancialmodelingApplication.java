@@ -24,10 +24,6 @@ public class FinancialmodelingApplication {
 		SpringApplication.run(FinancialmodelingApplication.class, args);
 	}
 
-	@GetMapping("/hello")
-	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return String.format("Hello %s!", name);
-	}
 
 	/*
 	This will use the AlphaVantage API 'TIME_SERIES_DAILY'
