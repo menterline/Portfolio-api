@@ -35,11 +35,12 @@ public class FinancialmodelingApplication {
 		//call alphavantage API for each ticker
 		//create a mapper that takes AV response to make it something usable - a TickerResponse
         try {
+        	String apikey = System.getenv("ALPHAVANTAGE_KEY");
 			Function<String, WebClient> webClientProvider = baseUrl -> WebClient.builder().baseUrl(baseUrl).build();
 			AlphaVantageService service = new AlphaVantageService(webClientProvider);
 			ArrayList<MyTickerData> tickerData = new ArrayList<>();
 			for (String ticker : tickers) {
-				AlphaVantageTickerData response = service.getDailyTimeSeries(ticker, "IPWCPZ1EZ7YVJRC5");
+				AlphaVantageTickerData response = service.getDailyTimeSeries(ticker, apikey);
 				if (response == null) {
 					throw new RuntimeException("No Response from AlphaVantage");
 				}
