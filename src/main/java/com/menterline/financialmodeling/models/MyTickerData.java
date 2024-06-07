@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class MyTickerData {
     private final String ticker;
-    private final ArrayList<DailyDataWithDate> data;
+    private final ArrayList<MyTickerDataNode> data;
 
-    public MyTickerData(String ticker, ArrayList<DailyDataWithDate> data) {
+    public MyTickerData(String ticker, ArrayList<MyTickerDataNode> data) {
         this.ticker = ticker;
         this.data = data;
     }
@@ -16,7 +16,7 @@ public class MyTickerData {
         return ticker;
     }
 
-    public ArrayList<DailyDataWithDate> getData() {
+    public ArrayList<MyTickerDataNode> getData() {
         return data;
     }
 

@@ -37,12 +37,20 @@ public class AlphaVantageTickerData {
     }
 
     public MyTickerData convertToMyTickerData() {
-        ArrayList<DailyDataWithDate> data = new ArrayList<>();
+        ArrayList<MyTickerDataNode> data = new ArrayList<>();
         List<String> keys = new ArrayList<>(getDailyData().keySet());
         for (String key : keys) {
             LocalDate localDate = LocalDate.parse(key, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            data.add((new DailyDataWithDate(getDailyData().get(key), date)));
+            DailyData dailyData = getDailyData().get(key);
+            MyTickerDataNode node = new MyTickerDataNode(
+            		dailyData.getOpen(), 
+            		dailyData.getHigh(),
+            		dailyData.getLow(),
+            		dailyData.getClose(),
+            		dailyData.getVolume(),
+            		date);
+            data.add(node);
         }
         String ticker = getMetaData().getSymbol();
         return new MyTickerData(ticker, data);
