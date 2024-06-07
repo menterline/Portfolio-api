@@ -39,6 +39,7 @@ public class AlphaVantageTickerData {
     public MyTickerData convertToMyTickerData() {
         ArrayList<MyTickerDataNode> data = new ArrayList<>();
         List<String> keys = new ArrayList<>(getDailyData().keySet());
+        Collections.sort(keys);
         for (String key : keys) {
             LocalDate localDate = LocalDate.parse(key, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());

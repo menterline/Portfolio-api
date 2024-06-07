@@ -46,8 +46,8 @@ class AlphaVantageTickerDataTests {
 
 			assertEquals("IBM", converted.getTicker());
 			assertEquals(4, converted.getData().size());
-			assertEquals(169.03, converted.getData().get(0).getClose());
-			assertEquals(167.86, converted.getData().get(3).getOpen());
+			assertEquals(167.36, converted.getData().get(0).getClose());
+			assertEquals(168.97, converted.getData().get(3).getOpen());
 		} catch(Exception e) {
 			System.out.println(e.toString());
 			assert false;
