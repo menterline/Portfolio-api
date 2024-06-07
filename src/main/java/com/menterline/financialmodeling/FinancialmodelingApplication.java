@@ -1,8 +1,10 @@
 package com.menterline.financialmodeling;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menterline.financialmodeling.models.AlphaVantageTickerData;
 import com.menterline.financialmodeling.models.MyTickerData;
+import com.menterline.financialmodeling.models.MyTickerDataNode;
 import com.menterline.financialmodeling.services.AlphaVantageService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,11 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.function.Function;
 
 @SpringBootApplication
@@ -34,9 +40,6 @@ public class FinancialmodelingApplication {
 	 */
 	@GetMapping("/timeSeriesDaily")
 	public ArrayList<MyTickerData> getTickerData(@RequestParam(value = "tickers", defaultValue = "") String[] tickers) {
-		//parse url params into array of tickers
-		//call alphavantage API for each ticker
-		//create a mapper that takes AV response to make it something usable - a TickerResponse
         try {
 //        	String apikey = System.getenv("ALPHAVANTAGE_KEY");
 //			Function<String, WebClient> webClientProvider = baseUrl -> WebClient.builder().baseUrl(baseUrl).build();
@@ -51,15 +54,20 @@ public class FinancialmodelingApplication {
 //			}
 //			return tickerData;
 //			Test code to skip calling AlphaVantage API
-			ObjectMapper objectMapper = new ObjectMapper();
-			// Read JSON file as a string
-			String jsonData = new String(Files.readAllBytes(Paths.get("src/test/resources/IBM_daily.json")));
-
-			AlphaVantageTickerData alphaVantageTickerData = objectMapper.readValue(jsonData, AlphaVantageTickerData.class);
-			MyTickerData converted = alphaVantageTickerData.convertToMyTickerData();
-			ArrayList<MyTickerData> test = new ArrayList<MyTickerData>();
-			test.add(converted);
-			return test;
+			ArrayList<MyTickerData> allData = new ArrayList<MyTickerData>();
+			for (String ticker : tickers) {
+				LocalDate currentDate= LocalDate.now();
+				ArrayList<MyTickerDataNode> nodes = new ArrayList<MyTickerDataNode>();
+				for (int i = 0; i < 100; i++) {
+					LocalDate localDate = currentDate.minusDays(100 - i);
+			        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+					MyTickerDataNode node = new MyTickerDataNode(Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100, date);
+					nodes.add(node);
+				}
+				MyTickerData data = new MyTickerData(ticker, nodes);
+				allData.add(data);
+			}
+			return allData;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -17,13 +17,13 @@ public class AlphaVantageService {
 
 
     public AlphaVantageTickerData getDailyTimeSeries(String ticker, String apiKey) {
-        Mono<String> test = webClient.get().uri(uriBuilder -> uriBuilder
-                .path("/query")
-                .queryParam("function", "TIME_SERIES_DAILY")
-                .queryParam("symbol", ticker)
-                .queryParam("apikey", apiKey).build()).retrieve().bodyToMono(String.class);
-
-        String jsonResponse = test.block();
+//        Mono<String> test = webClient.get().uri(uriBuilder -> uriBuilder
+//                .path("/query")
+//                .queryParam("function", "TIME_SERIES_DAILY")
+//                .queryParam("symbol", ticker)
+//                .queryParam("apikey", apiKey).build()).retrieve().bodyToMono(String.class);
+//
+//        String jsonResponse = test.block();
 
         return webClient.get().uri(uriBuilder -> uriBuilder
                 .path("/query")
