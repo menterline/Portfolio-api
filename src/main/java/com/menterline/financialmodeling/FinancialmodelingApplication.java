@@ -1,5 +1,6 @@
 package com.menterline.financialmodeling;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menterline.financialmodeling.models.AlphaVantageTickerData;
 import com.menterline.financialmodeling.models.MyTickerData;
 import com.menterline.financialmodeling.services.AlphaVantageService;
@@ -13,6 +14,8 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.function.Function;
 
@@ -35,18 +38,28 @@ public class FinancialmodelingApplication {
 		//call alphavantage API for each ticker
 		//create a mapper that takes AV response to make it something usable - a TickerResponse
         try {
-        	String apikey = System.getenv("ALPHAVANTAGE_KEY");
-			Function<String, WebClient> webClientProvider = baseUrl -> WebClient.builder().baseUrl(baseUrl).build();
-			AlphaVantageService service = new AlphaVantageService(webClientProvider);
-			ArrayList<MyTickerData> tickerData = new ArrayList<>();
-			for (String ticker : tickers) {
-				AlphaVantageTickerData response = service.getDailyTimeSeries(ticker, apikey);
-				if (response == null) {
-					throw new RuntimeException("No Response from AlphaVantage");
-				}
-				tickerData.add(response.convertToMyTickerData());
-			}
-			return tickerData;
+//        	String apikey = System.getenv("ALPHAVANTAGE_KEY");
+//			Function<String, WebClient> webClientProvider = baseUrl -> WebClient.builder().baseUrl(baseUrl).build();
+//			AlphaVantageService service = new AlphaVantageService(webClientProvider);
+//			ArrayList<MyTickerData> tickerData = new ArrayList<>();
+//			for (String ticker : tickers) {
+//				AlphaVantageTickerData response = service.getDailyTimeSeries(ticker, apikey);
+//				if (response == null) {
+//					throw new RuntimeException("No Response from AlphaVantage");
+//				}
+//				tickerData.add(response.convertToMyTickerData());
+//			}
+//			return tickerData;
+//			Test code to skip calling AlphaVantage API
+			ObjectMapper objectMapper = new ObjectMapper();
+			// Read JSON file as a string
+			String jsonData = new String(Files.readAllBytes(Paths.get("src/test/resources/IBM_daily.json")));
+
+			AlphaVantageTickerData alphaVantageTickerData = objectMapper.readValue(jsonData, AlphaVantageTickerData.class);
+			MyTickerData converted = alphaVantageTickerData.convertToMyTickerData();
+			ArrayList<MyTickerData> test = new ArrayList<MyTickerData>();
+			test.add(converted);
+			return test;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
